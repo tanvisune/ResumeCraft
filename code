@@ -1,1 +1,840 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>ResuméCraft AI — Build. Fix. Land the Job.</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0b0c0e;
+  --surface:#111316;
+  --card:#161a1f;
+  --border:#252a30;
+  --gold:#d4a843;
+  --gold2:#f0c96a;
+  --text:#e8e4dc;
+  --muted:#6b7280;
+  --dim:#3a3f48;
+  --accent:#e05c2e;
+  --white:#ffffff;
+}
+html{scroll-behavior:smooth}
+body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden}
 
+/* ── NAV ── */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:1.1rem 3rem;
+  background:rgba(11,12,14,0.85);
+  backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--border);
+}
+.nav-logo{font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-weight:700;color:var(--gold);letter-spacing:-0.01em;cursor:pointer}
+.nav-logo span{color:var(--text)}
+.nav-links{display:flex;gap:2rem;list-style:none}
+.nav-links a{color:var(--muted);text-decoration:none;font-size:0.85rem;font-weight:500;letter-spacing:0.03em;transition:color 0.2s}
+.nav-links a:hover{color:var(--text)}
+.nav-cta{
+  padding:0.55rem 1.4rem;
+  background:var(--gold);color:#0b0c0e;
+  font-size:0.8rem;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;
+  border:none;border-radius:3px;cursor:pointer;transition:background 0.2s;
+}
+.nav-cta:hover{background:var(--gold2)}
+
+/* ── HERO ── */
+#home{
+  min-height:100vh;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;padding:8rem 2rem 4rem;
+  position:relative;overflow:hidden;
+}
+.hero-bg{
+  position:absolute;inset:0;
+  background:radial-gradient(ellipse 80% 60% at 50% 0%,rgba(212,168,67,0.08) 0%,transparent 70%),
+              radial-gradient(ellipse 50% 40% at 80% 80%,rgba(224,92,46,0.05) 0%,transparent 60%);
+}
+.hero-grid{
+  position:absolute;inset:0;
+  background-image:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px);
+  background-size:60px 60px;
+  opacity:0.25;
+  mask-image:radial-gradient(ellipse at center,black 30%,transparent 75%);
+}
+.hero-badge{
+  display:inline-flex;align-items:center;gap:0.5rem;
+  padding:0.4rem 1rem;
+  border:1px solid var(--border);
+  border-radius:100px;
+  font-size:0.72rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;
+  color:var(--gold);margin-bottom:2rem;
+  background:rgba(212,168,67,0.05);
+  animation:fadeUp 0.8s ease both;
+}
+.hero-title{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(3rem,8vw,6.5rem);
+  font-weight:700;line-height:1.05;
+  letter-spacing:-0.02em;
+  margin-bottom:1.5rem;
+  animation:fadeUp 0.8s 0.1s ease both;
+}
+.hero-title em{font-style:italic;color:var(--gold)}
+.hero-sub{
+  font-size:clamp(1rem,2vw,1.2rem);font-weight:300;
+  color:var(--muted);max-width:560px;line-height:1.7;
+  margin-bottom:2.5rem;
+  animation:fadeUp 0.8s 0.2s ease both;
+}
+.hero-actions{
+  display:flex;gap:1rem;flex-wrap:wrap;justify-content:center;
+  animation:fadeUp 0.8s 0.3s ease both;
+}
+.btn-hero{
+  padding:0.9rem 2.2rem;font-size:0.88rem;font-weight:600;letter-spacing:0.05em;
+  border-radius:4px;cursor:pointer;transition:all 0.2s;border:none;
+}
+.btn-hero-primary{background:var(--gold);color:#0b0c0e}
+.btn-hero-primary:hover{background:var(--gold2);transform:translateY(-2px)}
+.btn-hero-outline{background:transparent;color:var(--text);border:1.5px solid var(--border)}
+.btn-hero-outline:hover{border-color:var(--gold);color:var(--gold)}
+.hero-stats{
+  display:flex;gap:3rem;margin-top:4rem;
+  animation:fadeUp 0.8s 0.4s ease both;
+}
+.stat{text-align:center}
+.stat-num{font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:700;color:var(--gold)}
+.stat-lbl{font-size:0.72rem;color:var(--muted);letter-spacing:0.08em;text-transform:uppercase;margin-top:0.2rem}
+
+/* ── FEATURES ── */
+#features{padding:6rem 3rem;max-width:1100px;margin:0 auto}
+.section-label{
+  font-size:0.72rem;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;
+  color:var(--gold);margin-bottom:1rem;
+}
+.section-title{
+  font-family:'Cormorant Garamond',serif;font-size:clamp(2rem,5vw,3.5rem);
+  font-weight:700;line-height:1.1;letter-spacing:-0.02em;margin-bottom:3.5rem;
+}
+.features-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.5rem}
+.feature-card{
+  background:var(--card);border:1px solid var(--border);border-radius:8px;
+  padding:2rem;transition:border-color 0.3s,transform 0.3s;
+  position:relative;overflow:hidden;
+}
+.feature-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,transparent,var(--gold),transparent);
+  opacity:0;transition:opacity 0.3s;
+}
+.feature-card:hover{border-color:var(--dim);transform:translateY(-4px)}
+.feature-card:hover::before{opacity:1}
+.feat-icon{font-size:2rem;margin-bottom:1.2rem}
+.feat-title{font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:700;margin-bottom:0.7rem}
+.feat-desc{font-size:0.85rem;color:var(--muted);line-height:1.7}
+
+/* ── HOW IT WORKS ── */
+#how{padding:6rem 3rem;background:var(--surface);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.how-inner{max-width:900px;margin:0 auto}
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:2rem;margin-top:3rem}
+.step{text-align:center;padding:1.5rem}
+.step-num{
+  width:48px;height:48px;border-radius:50%;
+  border:1.5px solid var(--gold);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:700;color:var(--gold);
+  margin:0 auto 1.2rem;
+}
+.step-title{font-weight:600;margin-bottom:0.5rem;font-size:0.95rem}
+.step-desc{font-size:0.82rem;color:var(--muted);line-height:1.6}
+.step-connector{display:none}
+
+/* ── TOOL SECTION ── */
+#tool{padding:5rem 2rem;max-width:960px;margin:0 auto}
+.tool-header{text-align:center;margin-bottom:3rem}
+.tool-tabs{
+  display:flex;background:var(--surface);border:1px solid var(--border);
+  border-radius:6px;padding:0.4rem;gap:0.4rem;margin-bottom:2rem;
+}
+.tool-tab{
+  flex:1;padding:0.75rem;font-size:0.8rem;font-weight:600;letter-spacing:0.05em;
+  text-transform:uppercase;border:none;background:transparent;
+  color:var(--muted);border-radius:4px;cursor:pointer;transition:all 0.2s;
+}
+.tool-tab.active{background:var(--card);color:var(--text);border:1px solid var(--border)}
+
+.form-card{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:2rem;margin-bottom:1.2rem}
+.form-card-title{
+  font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:700;
+  display:flex;align-items:center;gap:0.6rem;margin-bottom:1.4rem;
+  padding-bottom:0.8rem;border-bottom:1px solid var(--border);
+}
+.form-card-title .pip{width:6px;height:6px;border-radius:50%;background:var(--gold);flex-shrink:0}
+.field-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.field-grid.full{grid-template-columns:1fr}
+.field-wrap{display:flex;flex-direction:column;gap:0.3rem}
+label{font-size:0.7rem;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted)}
+input,textarea,select{
+  width:100%;padding:0.65rem 0.9rem;
+  font-family:'Outfit',sans-serif;font-size:0.88rem;
+  background:#0f1215;border:1px solid var(--border);
+  border-radius:4px;color:var(--text);outline:none;transition:border-color 0.2s;
+}
+input:focus,textarea:focus,select:focus{border-color:var(--gold)}
+select option{background:#0f1215}
+textarea{resize:vertical;min-height:90px;line-height:1.6}
+.hint{font-size:0.72rem;color:var(--muted);margin-top:0.3rem;line-height:1.5}
+
+.action-row{display:flex;gap:0.8rem;margin-top:1.5rem;flex-wrap:wrap}
+.btn-main{
+  padding:0.8rem 2rem;font-family:'Outfit',sans-serif;font-size:0.82rem;
+  font-weight:600;letter-spacing:0.07em;text-transform:uppercase;
+  border:none;border-radius:4px;cursor:pointer;transition:all 0.2s;
+  display:inline-flex;align-items:center;gap:0.5rem;
+}
+.btn-gold{background:var(--gold);color:#0b0c0e}
+.btn-gold:hover:not(:disabled){background:var(--gold2);transform:translateY(-1px)}
+.btn-gold:disabled{opacity:0.4;cursor:not-allowed}
+.btn-ghost{background:transparent;color:var(--muted);border:1.5px solid var(--border)}
+.btn-ghost:hover{color:var(--text);border-color:var(--dim)}
+
+.mode-row{display:flex;gap:0.6rem;flex-wrap:wrap;margin-bottom:1rem}
+.mode-pill{
+  padding:0.4rem 1rem;font-size:0.73rem;font-weight:600;letter-spacing:0.05em;
+  text-transform:uppercase;border:1.5px solid var(--border);border-radius:100px;
+  cursor:pointer;background:transparent;color:var(--muted);transition:all 0.2s;
+}
+.mode-pill.active{background:var(--gold);color:#0b0c0e;border-color:var(--gold)}
+
+/* ── RESULT ── */
+.result-box{
+  background:var(--card);border:1px solid var(--border);border-radius:8px;
+  margin-top:1.5rem;overflow:hidden;
+  animation:fadeUp 0.4s ease both;
+}
+.result-top{
+  background:var(--surface);border-bottom:1px solid var(--border);
+  padding:1rem 1.5rem;display:flex;align-items:center;justify-content:space-between;
+}
+.result-label{font-size:0.72rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold)}
+.copy-btn{
+  padding:0.35rem 0.9rem;font-size:0.7rem;font-weight:600;letter-spacing:0.06em;
+  text-transform:uppercase;border:1px solid var(--border);border-radius:3px;
+  background:transparent;color:var(--muted);cursor:pointer;transition:all 0.2s;
+}
+.copy-btn:hover{border-color:var(--gold);color:var(--gold)}
+.result-body{
+  padding:1.8rem;font-size:0.88rem;line-height:1.9;
+  white-space:pre-wrap;color:var(--text);
+  max-height:550px;overflow-y:auto;
+}
+.loader{
+  display:flex;align-items:center;gap:0.8rem;
+  padding:2rem 1.8rem;color:var(--muted);font-size:0.85rem;
+}
+.spinner{
+  width:20px;height:20px;border:2px solid var(--border);
+  border-top-color:var(--gold);border-radius:50%;
+  animation:spin 0.7s linear infinite;
+}
+
+/* ── FOOTER ── */
+footer{
+  text-align:center;padding:3rem 2rem;
+  border-top:1px solid var(--border);
+  font-size:0.8rem;color:var(--muted);
+}
+footer strong{color:var(--gold);font-family:'Cormorant Garamond',serif;font-size:1rem}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ── RESPONSIVE ── */
+@media(max-width:700px){
+  nav{padding:1rem 1.2rem}
+  .nav-links{display:none}
+  #home{padding:7rem 1.2rem 3rem}
+  .hero-stats{gap:1.5rem}
+  #features,#how{padding:4rem 1.2rem}
+  #tool{padding:3rem 1.2rem}
+  .field-grid{grid-template-columns:1fr}
+  .form-card{padding:1.2rem}
+}
+
+/* scrollbar */
+::-webkit-scrollbar{width:6px}
+::-webkit-scrollbar-track{background:var(--surface)}
+::-webkit-scrollbar-thumb{background:var(--dim);border-radius:3px}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo" onclick="scrollTo('home')">Resumé<span>Craft</span></div>
+  <ul class="nav-links">
+    <li><a href="#home">Home</a></li>
+    <li><a href="#features">Features</a></li>
+    <li><a href="#how">How It Works</a></li>
+    <li><a href="#tool">Try It</a></li>
+  </ul>
+  <button class="nav-cta" onclick="document.getElementById('tool').scrollIntoView({behavior:'smooth'})">Try Free →</button>
+</nav>
+
+<!-- HERO -->
+<section id="home">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-badge">✦ Powered by Claude AI</div>
+  <h1 class="hero-title">Build Resumes That<br/><em>Actually Get Interviews</em></h1>
+  <p class="hero-sub">AI-powered resume generation and correction. Craft polished, ATS-optimized resumes in minutes — not hours.</p>
+  <div class="hero-actions">
+    <button class="btn-hero btn-hero-primary" onclick="document.getElementById('tool').scrollIntoView({behavior:'smooth'})">Generate My Resume</button>
+    <button class="btn-hero btn-hero-outline" onclick="document.getElementById('features').scrollIntoView({behavior:'smooth'})">See Features</button>
+  </div>
+  <div class="hero-stats">
+    <div class="stat"><div class="stat-num">4</div><div class="stat-lbl">AI Modes</div></div>
+    <div class="stat"><div class="stat-num">60s</div><div class="stat-lbl">Generation Time</div></div>
+    <div class="stat"><div class="stat-num">ATS</div><div class="stat-lbl">Optimized</div></div>
+    <div class="stat"><div class="stat-num">Free</div><div class="stat-lbl">To Use</div></div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section id="features">
+  <p class="section-label">What We Offer</p>
+  <h2 class="section-title">Everything You Need<br/>to Land the Role</h2>
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="feat-icon">✦</div>
+      <div class="feat-title">AI Resume Generation</div>
+      <div class="feat-desc">Fill in your details and get a complete, professionally written resume in under a minute. Tailored to your target role and tone.</div>
+    </div>
+    <div class="feature-card">
+      <div class="feat-icon">✎</div>
+      <div class="feat-title">Grammar & Language Fix</div>
+      <div class="feat-desc">Paste your existing resume and instantly fix grammar, spelling, punctuation, and awkward phrasing with AI-powered editing.</div>
+    </div>
+    <div class="feature-card">
+      <div class="feat-icon">⚡</div>
+      <div class="feat-title">ATS Optimization</div>
+      <div class="feat-desc">Beat the bots. Get your resume scored for ATS compatibility, identify missing keywords, and receive an optimized rewrite.</div>
+    </div>
+    <div class="feature-card">
+      <div class="feat-icon">🚀</div>
+      <div class="feat-title">Impact Booster</div>
+      <div class="feat-desc">Transform weak bullet points into results-driven statements with strong action verbs and quantifiable achievements.</div>
+    </div>
+    <div class="feature-card">
+      <div class="feat-icon">🎯</div>
+      <div class="feat-title">Role-Targeted Writing</div>
+      <div class="feat-desc">Specify your target job and get a resume tailored to that exact role — whether it's tech, design, finance, or management.</div>
+    </div>
+    <div class="feature-card">
+      <div class="feat-icon">🔍</div>
+      <div class="feat-title">Full Review & Score</div>
+      <div class="feat-desc">Get a comprehensive review including a score out of 10, key strengths, critical issues, and a fully improved version.</div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section id="how">
+  <div class="how-inner">
+    <p class="section-label">Process</p>
+    <h2 class="section-title">Three Steps to Your<br/>Perfect Resume</h2>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-title">Fill Your Details</div>
+        <div class="step-desc">Enter your personal info, experience, education, and skills into our clean, structured form.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-title">Choose Your Mode</div>
+        <div class="step-desc">Generate a new resume or paste your existing one for correction, ATS optimization, or impact boosting.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-title">Copy & Apply</div>
+        <div class="step-desc">Get your polished resume instantly. Copy it and start applying with confidence.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TOOL -->
+<section id="tool">
+  <div class="tool-header">
+    <p class="section-label">The Tool</p>
+    <h2 class="section-title">Try ResuméCraft AI</h2>
+  </div>
+
+  <div class="tool-tabs">
+    <button class="tool-tab active" onclick="switchTab('generate',this)">✦ Generate Resume</button>
+    <button class="tool-tab" onclick="switchTab('correct',this)">✎ Correct & Improve</button>
+  </div>
+
+  <!-- GENERATE -->
+  <div id="tab-generate">
+    <div class="form-card">
+      <div class="form-card-title"><span class="pip"></span>Target & Tone</div>
+      <div class="field-grid">
+        <div class="field-wrap">
+          <label>Target Role</label>
+          <input id="g-role" placeholder="e.g. UI/UX Designer, Software Engineer"/>
+        </div>
+        <div class="field-wrap">
+          <label>Tone</label>
+          <select id="g-tone">
+            <option value="professional">Professional</option>
+            <option value="creative">Creative</option>
+            <option value="technical">Technical</option>
+            <option value="executive">Executive</option>
+            <option value="entry-level">Entry-Level / Fresher</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-card">
+      <div class="form-card-title"><span class="pip"></span>Personal Information</div>
+      <div class="field-grid">
+        <div class="field-wrap"><label>Full Name</label><input id="g-name" placeholder="Tanvi Sharma"/></div>
+        <div class="field-wrap"><label>Email</label><input id="g-email" placeholder="tanvi@email.com"/></div>
+        <div class="field-wrap"><label>Phone</label><input id="g-phone" placeholder="+91 98765 43210"/></div>
+        <div class="field-wrap"><label>LinkedIn</label><input id="g-linkedin" placeholder="linkedin.com/in/tanvi"/></div>
+        <div class="field-wrap"><label>Location</label><input id="g-location" placeholder="Delhi, India"/></div>
+      </div>
+    </div>
+
+    <div class="form-card">
+      <div class="form-card-title"><span class="pip"></span>Professional Summary</div>
+      <div class="field-wrap">
+        <label>Summary</label>
+        <textarea id="g-summary" placeholder="UI/UX designer with 2+ years experience building user-centred mobile apps..."></textarea>
+        <span class="hint">Mention years of experience, key strengths, and what makes you stand out.</span>
+      </div>
+    </div>
+
+    <div class="form-card">
+      <div class="form-card-title"><span class="pip"></span>Work Experience</div>
+      <div class="field-grid">
+        <div class="field-wrap"><label>Job Title</label><input id="g-jobtitle" placeholder="UI/UX Designer"/></div>
+        <div class="field-wrap"><label>Company</label><input id="g-company" placeholder="Tech Startup, Delhi"/></div>
+        <div class="field-wrap"><label>Duration</label><input id="g-duration" placeholder="Jan 2023 – Present"/></div>
+      </div>
+      <div class="field-wrap" style="margin-top:1rem">
+        <label>Responsibilities & Achievements</label>
+        <textarea id="g-resp" placeholder="• Designed 5 mobile screens improving retention by 30%&#10;• Led user research sessions with 20+ participants"></textarea>
+        <span class="hint">Use bullet points. Add numbers and metrics for impact.</span>
+      </div>
+    </div>
+
+    <div class="form-card">
+      <div class="form-card-title"><span class="pip"></span>Education</div>
+      <div class="field-grid">
+        <div class="field-wrap"><label>Degree</label><input id="g-degree" placeholder="B.Tech in Computer Science"/></div>
+        <div class="field-wrap"><label>Institution</label><input id="g-institution" placeholder="Delhi Technological University"/></div>
+        <div class="field-wrap"><label>Year</label><input id="g-year" placeholder="2024"/></div>
+        <div class="field-wrap"><label>GPA / Percentage</label><input id="g-gpa" placeholder="8.5 / 10 (optional)"/></div>
+      </div>
+    </div>
+
+    <div class="form-card">
+      <div class="form-card-title"><span class="pip"></span>Skills</div>
+      <div class="field-wrap">
+        <label>Skills (comma-separated)</label>
+        <input id="g-skills" placeholder="Figma, Adobe XD, HTML, CSS, Python, React, User Research"/>
+      </div>
+    </div>
+
+    <div class="action-row">
+      <button class="btn-main btn-gold" onclick="generateResume()" id="gen-btn">✦ Generate My Resume</button>
+      <button class="btn-main btn-ghost" onclick="clearGenerate()">↺ Clear</button>
+    </div>
+  </div>
+
+  <!-- CORRECT -->
+  <div id="tab-correct" style="display:none">
+    <div class="form-card">
+      <div class="form-card-title"><span class="pip"></span>Choose Mode</div>
+      <div class="mode-row">
+        <button class="mode-pill active" data-mode="full" onclick="setMode(this,'full')">🔍 Full Review</button>
+        <button class="mode-pill" data-mode="grammar" onclick="setMode(this,'grammar')">✎ Grammar Fix</button>
+        <button class="mode-pill" data-mode="ats" onclick="setMode(this,'ats')">⚡ ATS Optimize</button>
+        <button class="mode-pill" data-mode="impact" onclick="setMode(this,'impact')">🚀 Boost Impact</button>
+      </div>
+      <p class="hint" id="mode-hint">Comprehensive review: score, strengths, critical issues, and a fully improved version of your resume.</p>
+    </div>
+    <div class="form-card">
+      <div class="form-card-title"><span class="pip"></span>Paste Your Resume</div>
+      <textarea id="c-resume" style="min-height:260px" placeholder="Paste your existing resume text here...&#10;&#10;Works best with plain text. Copy from your Word doc or PDF."></textarea>
+      <span class="hint">Tip: Select all text in your resume (Ctrl+A), copy, then paste here.</span>
+    </div>
+    <div class="action-row">
+      <button class="btn-main btn-gold" onclick="correctResume()" id="cor-btn">✎ Analyze & Improve</button>
+      <button class="btn-main btn-ghost" onclick="document.getElementById('c-resume').value='';clearResult()">↺ Clear</button>
+    </div>
+  </div>
+
+  <!-- RESULT -->
+  <div id="result-area" style="display:none">
+    <div class="result-box">
+      <div class="result-top">
+        <span class="result-label" id="result-label">Generated Resume</span>
+        <div style="display:flex;gap:0.5rem">
+          <button class="copy-btn" onclick="copyResult()">⎘ Copy</button>
+          <button class="copy-btn" onclick="downloadPDF()" style="color:var(--gold);border-color:var(--gold)">⬇ PDF</button>
+        </div>
+      </div>
+      <div id="result-inner"></div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <strong>ResuméCraft AI</strong><br/>
+  <span style="font-size:0.75rem;color:var(--muted);margin-top:0.5rem;display:block">
+    Powered by Claude AI · Built for job seekers · Free to use
+  </span>
+</footer>
+
+<script>
+let currentMode = 'full';
+const modeHints = {
+  full: 'Comprehensive review: score, strengths, critical issues, and a fully improved version of your resume.',
+  grammar: 'Fix all grammar, spelling, punctuation, and language quality issues.',
+  ats: 'Optimize for Applicant Tracking Systems — keywords, formatting, and structure.',
+  impact: 'Stronger action verbs, quantified achievements, and results-driven bullet points.'
+};
+
+function switchTab(tab, el) {
+  document.querySelectorAll('.tool-tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('tab-generate').style.display = tab === 'generate' ? 'block' : 'none';
+  document.getElementById('tab-correct').style.display = tab === 'correct' ? 'block' : 'none';
+  clearResult();
+}
+
+function setMode(el, mode) {
+  currentMode = mode;
+  document.querySelectorAll('.mode-pill').forEach(p => p.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('mode-hint').textContent = modeHints[mode];
+}
+
+function clearResult() {
+  document.getElementById('result-area').style.display = 'none';
+  document.getElementById('result-inner').innerHTML = '';
+}
+
+function showLoader(label) {
+  document.getElementById('result-label').textContent = label;
+  document.getElementById('result-inner').innerHTML = '<div class="loader"><div class="spinner"></div>AI is crafting your resume…</div>';
+  document.getElementById('result-area').style.display = 'block';
+  document.getElementById('result-area').scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+function showResult(text) {
+  document.getElementById('result-inner').innerHTML = `<div class="result-body">${escapeHtml(text)}</div>`;
+}
+
+function escapeHtml(t) {
+  return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function copyResult() {
+  const body = document.querySelector('.result-body');
+  if(body) { navigator.clipboard.writeText(body.textContent); alert('Copied to clipboard!'); }
+}
+
+function downloadPDF() {
+  const body = document.querySelector('.result-body');
+  if(!body || !body.textContent.trim()) { alert('No resume to download yet.'); return; }
+
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({ unit: 'pt', format: 'a4' });
+
+  const pageW = doc.internal.pageSize.getWidth();
+  const pageH = doc.internal.pageSize.getHeight();
+  const margin = 50;
+  const maxW = pageW - margin * 2;
+  let y = margin;
+
+  // Header bar
+  doc.setFillColor(11, 12, 14);
+  doc.rect(0, 0, pageW, 55, 'F');
+  doc.setTextColor(212, 168, 67);
+  doc.setFontSize(20);
+  doc.setFont('helvetica', 'bold');
+  doc.text('ResuméCraft AI', margin, 36);
+  doc.setFontSize(8);
+  doc.setFont('helvetica', 'normal');
+  doc.setTextColor(180, 170, 150);
+  doc.text('Generated Resume', pageW - margin, 36, { align: 'right' });
+
+  // Gold line
+  doc.setDrawColor(212, 168, 67);
+  doc.setLineWidth(1.5);
+  doc.line(0, 55, pageW, 55);
+
+  y = 80;
+  doc.setTextColor(20, 20, 20);
+
+  const rawText = body.textContent;
+  const lines = rawText.split('\n');
+
+  lines.forEach(line => {
+    const trimmed = line.trim();
+    if (!trimmed) { y += 6; return; }
+
+    // Section headers (ALL CAPS lines or lines ending with :)
+    const isHeader = /^[A-Z][A-Z\s&\/]+$/.test(trimmed) || 
+                     /^(CONTACT|EXPERIENCE|EDUCATION|SKILLS|SUMMARY|OBJECTIVE|PROFESSIONAL|WORK|CERTIFICATIONS|PROJECTS)/i.test(trimmed);
+
+    if (isHeader) {
+      y += 6;
+      doc.setFontSize(10);
+      doc.setFont('helvetica', 'bold');
+      doc.setTextColor(150, 100, 20);
+      const wrapped = doc.splitTextToSize(trimmed.toUpperCase(), maxW);
+      if (y + wrapped.length * 14 > pageH - margin) { doc.addPage(); y = margin; }
+      doc.text(wrapped, margin, y);
+      y += wrapped.length * 14;
+
+      // Underline
+      doc.setDrawColor(212, 168, 67);
+      doc.setLineWidth(0.5);
+      doc.line(margin, y - 4, pageW - margin, y - 4);
+      y += 4;
+      doc.setTextColor(20, 20, 20);
+    } else if (trimmed.startsWith('•') || trimmed.startsWith('-') || trimmed.startsWith('*')) {
+      doc.setFontSize(9);
+      doc.setFont('helvetica', 'normal');
+      doc.setTextColor(40, 40, 40);
+      const bulletText = '• ' + trimmed.replace(/^[•\-\*]\s*/, '');
+      const wrapped = doc.splitTextToSize(bulletText, maxW - 10);
+      if (y + wrapped.length * 13 > pageH - margin) { doc.addPage(); y = margin; }
+      doc.text(wrapped, margin + 8, y);
+      y += wrapped.length * 13;
+    } else {
+      doc.setFontSize(9);
+      doc.setFont('helvetica', 'normal');
+      doc.setTextColor(40, 40, 40);
+      const wrapped = doc.splitTextToSize(trimmed, maxW);
+      if (y + wrapped.length * 13 > pageH - margin) { doc.addPage(); y = margin; }
+      doc.text(wrapped, margin, y);
+      y += wrapped.length * 13;
+    }
+  });
+
+  // Footer on each page
+  const totalPages = doc.internal.getNumberOfPages();
+  for (let i = 1; i <= totalPages; i++) {
+    doc.setPage(i);
+    doc.setFontSize(7);
+    doc.setTextColor(160, 160, 160);
+    doc.text(`Page ${i} of ${totalPages} · ResuméCraft AI`, pageW / 2, pageH - 20, { align: 'center' });
+  }
+
+  const name = document.getElementById('g-name')?.value?.trim() || 'resume';
+  doc.save(`${name.replace(/\s+/g,'_')}_resume.pdf`);
+}
+
+function clearGenerate() {
+  ['g-name','g-email','g-phone','g-linkedin','g-location','g-summary',
+   'g-jobtitle','g-company','g-duration','g-resp','g-degree','g-institution',
+   'g-year','g-gpa','g-skills','g-role'].forEach(id => {
+    const el = document.getElementById(id);
+    if(el) el.value = '';
+  });
+  document.getElementById('g-tone').value = 'professional';
+  clearResult();
+}
+
+function splitItems(text) {
+  return (text || '')
+    .split(/\n|,|;|\u2022/)
+    .map(item => item.trim())
+    .filter(Boolean);
+}
+
+function toSentenceCase(text) {
+  if (!text) return '';
+  return text.charAt(0).toUpperCase() + text.slice(1);
+}
+
+function normalizeBullet(line) {
+  const clean = line.replace(/^[\-\*\u2022]\s*/, '').trim();
+  if (!clean) return '';
+  return '• ' + toSentenceCase(clean).replace(/\s+/g, ' ');
+}
+
+function buildSummary(role, jobTitle, skills, tone) {
+  const topSkills = splitItems(skills).slice(0, 4).join(', ');
+  const roleText = role || jobTitle || 'professional';
+  const toneMap = {
+    professional: 'results-driven',
+    confident: 'confident and value-focused',
+    concise: 'clear and efficient',
+    modern: 'adaptable and modern'
+  };
+  const toneText = toneMap[tone] || 'results-driven';
+  return `${roleText} with a ${toneText} profile focused on delivering reliable work, clear communication, and practical problem-solving.${topSkills ? ` Core strengths include ${topSkills}.` : ''}`;
+}
+
+function buildResumeFromForm() {
+  const name = document.getElementById('g-name').value.trim();
+  const email = document.getElementById('g-email').value.trim();
+  const phone = document.getElementById('g-phone').value.trim();
+  const linkedin = document.getElementById('g-linkedin').value.trim();
+  const location = document.getElementById('g-location').value.trim();
+  const summaryInput = document.getElementById('g-summary').value.trim();
+  const jobTitle = document.getElementById('g-jobtitle').value.trim();
+  const company = document.getElementById('g-company').value.trim();
+  const duration = document.getElementById('g-duration').value.trim();
+  const responsibilities = splitItems(document.getElementById('g-resp').value);
+  const degree = document.getElementById('g-degree').value.trim();
+  const institution = document.getElementById('g-institution').value.trim();
+  const year = document.getElementById('g-year').value.trim();
+  const gpa = document.getElementById('g-gpa').value.trim();
+  const skills = splitItems(document.getElementById('g-skills').value);
+  const role = document.getElementById('g-role').value.trim();
+  const tone = document.getElementById('g-tone').value;
+
+  const contact = [email, phone, linkedin, location].filter(Boolean).join(' | ');
+  const summary = summaryInput || buildSummary(role, jobTitle, skills.join(', '), tone);
+  const experienceBullets = responsibilities.length
+    ? responsibilities.map(normalizeBullet).filter(Boolean)
+    : ['• Contributed to team goals, completed assigned work on time, and supported day-to-day project needs.'];
+
+  const educationLine = [degree, institution].filter(Boolean).join(' | ');
+  const eduMeta = [year, gpa ? `GPA: ${gpa}` : ''].filter(Boolean).join(' | ');
+
+  const parts = [
+    name.toUpperCase(),
+    contact,
+    '',
+    'PROFESSIONAL SUMMARY',
+    summary,
+    '',
+    'WORK EXPERIENCE',
+    [jobTitle, company].filter(Boolean).join(' | ') || 'Experience details',
+    duration || 'Duration not specified',
+    ...experienceBullets
+  ];
+
+  if (educationLine || eduMeta) {
+    parts.push('', 'EDUCATION', educationLine || 'Education details', eduMeta);
+  }
+
+  if (skills.length) {
+    parts.push('', 'SKILLS', skills.join(' | '));
+  }
+
+  if (role) {
+    parts.push('', 'TARGET ROLE', role);
+  }
+
+  return parts.filter((line, index, arr) => !(line === '' && arr[index - 1] === '')).join('\n');
+}
+
+function scoreResume(text) {
+  let score = 5;
+  if (/@/.test(text)) score += 1;
+  if (/\b\d{10}\b|\+\d/.test(text)) score += 1;
+  if (/summary|profile|objective/i.test(text)) score += 1;
+  if (/experience|work/i.test(text)) score += 1;
+  if (/education/i.test(text)) score += 1;
+  if (/skills/i.test(text)) score += 1;
+  return Math.min(score, 10);
+}
+
+function detectMissingSections(text) {
+  const checks = [
+    ['Professional summary', /summary|profile|objective/i],
+    ['Work experience', /experience|employment|work/i],
+    ['Education', /education|degree|university|college/i],
+    ['Skills', /skills|tools|technologies/i],
+    ['Contact details', /@|\b\d{10}\b|\+\d/i]
+  ];
+  return checks.filter(([_, pattern]) => !pattern.test(text)).map(([label]) => label);
+}
+
+function improveBullet(line) {
+  const clean = line.replace(/^[\-\*\u2022]\s*/, '').trim();
+  if (!clean) return '';
+  const replacements = [
+    [/^\bworked on\b/i, 'Delivered'],
+    [/^\bhelped\b/i, 'Supported'],
+    [/^\bdid\b/i, 'Completed'],
+    [/^\bmade\b/i, 'Built'],
+    [/^\bresponsible for\b/i, 'Managed']
+  ];
+  let improved = clean;
+  replacements.forEach(([pattern, replacement]) => {
+    improved = improved.replace(pattern, replacement);
+  });
+  if (!/[.!?]$/.test(improved)) improved += '.';
+  return '• ' + improved;
+}
+
+function buildImprovedResumeText(text) {
+  const lines = text.split('\n').map(line => line.trim()).filter(Boolean);
+  return lines.map(line => {
+    if (/^[A-Z][A-Z\s&/]+$/.test(line)) return line;
+    if (/^[\-\*\u2022]/.test(line)) return improveBullet(line);
+    return toSentenceCase(line.replace(/\s+/g, ' '));
+  }).join('\n');
+}
+
+function runLocalAssistant(task, label) {
+  showLoader(label);
+  setTimeout(() => {
+    let output = '';
+
+    if (task === 'generate') {
+      output = buildResumeFromForm();
+    } else {
+      const text = document.getElementById('c-resume').value.trim();
+      const score = scoreResume(text);
+      const missing = detectMissingSections(text);
+      const improved = buildImprovedResumeText(text);
+
+      if (task === 'grammar') {
+        output = `GRAMMAR REVIEW\nImproved clarity, punctuation, and formatting for the resume text below.\n\nCORRECTED VERSION\n${improved}`;
+      } else if (task === 'ats') {
+        output = `ATS REVIEW\nATS Friendliness Score: ${score}/10\n\nMissing or weak areas: ${missing.length ? missing.join(', ') : 'No major section gaps detected.'}\n\nFormatting tips:\n• Use clear section headings.\n• Keep dates and job titles consistent.\n• Avoid tables, graphics, and multi-column layouts for ATS parsing.\n\nATS-OPTIMIZED VERSION\n${improved}`;
+      } else if (task === 'impact') {
+        output = `IMPACT BOOST\nFocus areas:\n• Start bullets with strong action verbs.\n• Add numbers, outcomes, or scope where possible.\n• Highlight ownership, tools, and business results.\n\nENHANCED VERSION\n${improved}`;
+      } else {
+        output = `FULL REVIEW\nOverall Score: ${score}/10\n\nKey strengths:\n• Resume includes core career information.\n• Content can be shaped into an ATS-friendly format.\n• Existing experience provides a base for stronger achievements.\n\nCritical issues to fix:\n1. Add measurable outcomes wherever possible.\n2. Use clearer section headings and consistent formatting.\n3. Include a sharper summary tailored to the target role.${missing.length ? `\n4. Add missing sections: ${missing.join(', ')}.` : ''}\n\nIMPROVED VERSION\n${improved}\n\nATS OPTIMIZATION TIPS\n• Mirror keywords from the job description.\n• Keep bullet points concise and results-focused.\n• Prioritize recent, relevant experience first.`;
+      }
+    }
+
+    showResult(output);
+  }, 350);
+}
+
+function generateResume() {
+  const name = document.getElementById('g-name').value;
+  if(!name.trim()) { alert('Please enter your name to continue.'); return; }
+  runLocalAssistant('generate', 'Generated Resume');
+}
+
+function correctResume() {
+  const text = document.getElementById('c-resume').value.trim();
+  if(!text) { alert('Please paste your resume text first.'); return; }
+  const labels = { full:'Full Review & Improved Resume', grammar:'Grammar Fixed Resume', ats:'ATS Optimized Resume', impact:'Impact Boosted Resume' };
+  runLocalAssistant(currentMode, labels[currentMode]);
+}
+</script>
+</body>
+</html>
